@@ -1,0 +1,43 @@
+﻿@model List<Survey>
+
+<div class="survey-container">
+    <h2>BIỂU MẪU</h2>
+
+    <div class="survey-actions">
+        <a asp-action="Create" class="btn btn-success">TẠO BIỂU MẪU MỚI</a>
+        <button class="btn btn-info">BIỂU MẪU GẦN ĐÂY</button>
+        <a asp-action="MySurveys" class="btn btn-warning">BIỂU MẪU CỦA TÔI</a>
+        <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">ĐĂNG XUẤT</a>
+    </div>
+
+    <div class="survey-list">
+        @foreach (var survey in Model)
+        {
+            <div class="survey-item card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">@survey.Title</h3>
+                    <p class="card-text">@survey.Description</p>
+                    <a asp-action="Details" asp-route-id="@survey.SurveyId" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .survey-container {
+            padding: 20px;
+        }
+
+        .survey-actions {
+            margin-bottom: 20px;
+        }
+
+        .survey-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+}
