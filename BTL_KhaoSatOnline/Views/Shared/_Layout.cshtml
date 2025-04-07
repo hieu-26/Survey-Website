@@ -44,11 +44,12 @@
                     </div>
 
                     <div class="user-menu d-flex align-items-center">
-                        @if (Context.Session.GetInt32("UserId") != null)
+                        @* @if (Context.Session.GetInt32("UserId") != null)  Đoạn này không chạy được*@
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <div class="user-profile">
                                 <!-- Hiển thị ảnh hoặc tên người dùng -->
-                                <img src="~/images/default-avatar.jpg" alt="Avatar" class="user-avatar">
+                                <img src="~/images/default-avatar.png" alt="Avatar" class="user-avatar">
                                 <span class="user-name">@Context.Session.GetString("Username")</span>
                                 <i class="fas fa-caret-down"></i>
 
