@@ -1,0 +1,22 @@
+﻿@model IEnumerable<BTL_KhaoSatOnline.Models.Survey>
+@{
+    ViewData["Title"] = "Biểu mẫu của tôi";
+}
+<h2>Biểu mẫu của tôi</h2>
+
+<div class="row">
+    @foreach (var survey in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@survey.Title</h5>
+                    <p class="card-text">@survey.Description</p>
+                    <a asp-action="Edit" asp-route-id="@survey.SurveyId" class="btn btn-primary">Chỉnh sửa</a>
+                    <a asp-action="Delete" asp-route-id="@survey.SurveyId" class="btn btn-danger">Xóa</a>
+                    <a asp-action="Results" asp-route-id="@survey.SurveyId" class="btn btn-info">Kết quả</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

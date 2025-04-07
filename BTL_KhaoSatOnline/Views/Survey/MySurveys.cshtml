@@ -1,0 +1,16 @@
+﻿@model List<Survey>
+
+<h2>Biểu mẫu của tôi</h2>
+
+<div class="row">
+    @foreach (var survey in Model)
+    {
+        <div class="card col-md-4 m-2 p-3 shadow-sm">
+            <h4>@survey.Title</h4>
+            <p>@survey.Description</p>
+            <a asp-action="Details" asp-route-id="@survey.SurveyId" class="btn btn-info">Xem chi tiết</a>
+            <a asp-action="Edit" asp-route-id="@survey.SurveyId" class="btn btn-primary">Chỉnh sửa</a>
+            <a asp-action="Delete" asp-route-id="@survey.SurveyId" class="btn btn-danger">Xóa</a>
+        </div>
+    }
+</div>

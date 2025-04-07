@@ -1,0 +1,50 @@
+﻿@model BTL_KhaoSatOnline.Models.Survey
+@{
+    ViewData["Title"] = "Kết quả khảo sát";
+}
+<h2>Kết quả: @Model.Title</h2>
+
+@foreach (var question in Model.Questions)
+{
+    <div class="mb-4">
+        <h5>@question.QuestionText</h5>
+
+        @if (question.QuestionType == "Text")
+        {
+            if (question.Answers != null && question.Answers.Any())
+            {
+                <ul>
+                    @foreach (var answer in question.Answers)
+                    {
+                        <li>@(string.IsNullOrWhiteSpace(answer.AnswerText) ? "(Không có câu trả lời)" : answer.AnswerText)</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p><i>Chưa có câu trả lời.</i></p>
+            }
+        }
+        else
+        {
+            if (question.Answers != null && question.Answers.Any())
+            {
+                var grouped = question.Answers
+                .Where(a => a.Option != null)
+                .GroupBy(a => a.Option.OptionText)
+                .Select(g => new { Option = g.Key, Count = g.Count() });
+
+                <ul>
+                    @foreach (var item in grouped)
+                    {
+                        <li>@item.Option: @item.Count lượt chọn</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p><i>Chưa có lựa chọn nào.</i></p>
+            }
+        }
+    </div>
+}
