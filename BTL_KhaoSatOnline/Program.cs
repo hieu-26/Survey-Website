@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Chuỗi kết nối database
-var connectionString = builder.Configuration.GetConnectionString("SurveyDB");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Thêm DbContext với cấu hình
 builder.Services.AddDbContext<SurveyDbContext>(options =>
