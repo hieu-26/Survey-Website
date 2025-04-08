@@ -163,7 +163,6 @@ namespace BTL_KhaoSatOnline.Controllers
             ViewBag.SurveyId = survey.SurveyId;
             return View(model);
         }
-
         // POST: Survey/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -181,19 +180,24 @@ namespace BTL_KhaoSatOnline.Controllers
             if (survey == null)
                 return NotFound();
 
+            // Cập nhật survey
             survey.Title = model.Title;
             survey.Description = model.Description;
             survey.IsPublic = model.IsPublic;
             survey.LastModifiedDate = DateTime.Now;
 
+            // Cập nhật setting
             survey.SurveySetting.AllowMultipleResponses = model.AllowMultipleResponses;
             survey.SurveySetting.RequireLogin = model.RequireLogin;
             survey.SurveySetting.StartDate = model.StartDate;
             survey.SurveySetting.EndDate = model.EndDate;
 
+            // Xóa toàn bộ câu hỏi và đáp án cũ
             _context.Options.RemoveRange(survey.Questions.SelectMany(q => q.Options));
             _context.Questions.RemoveRange(survey.Questions);
+            await _context.SaveChangesAsync();
 
+            // Thêm mới lại từ ViewModel
             foreach (var qvm in model.Questions)
             {
                 var question = new Question
@@ -204,7 +208,7 @@ namespace BTL_KhaoSatOnline.Controllers
                     IsRequired = qvm.IsRequired
                 };
                 _context.Questions.Add(question);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // để lấy QuestionId
 
                 foreach (var opt in qvm.Options)
                 {
@@ -221,7 +225,6 @@ namespace BTL_KhaoSatOnline.Controllers
             return RedirectToAction("MySurveys");
         }
 
-        // GET: Survey/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -232,17 +235,17 @@ namespace BTL_KhaoSatOnline.Controllers
 
             if (survey == null) return NotFound();
 
-            return View(survey);
+            return View(survey); // View này cần model là Survey
         }
-
         // POST: Survey/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var survey = await _context.Surveys
                 .Include(s => s.Questions)
                 .ThenInclude(q => q.Options)
+                .Include(s => s.SurveySetting)
                 .FirstOrDefaultAsync(s => s.SurveyId == id);
 
             if (survey != null)
@@ -256,7 +259,6 @@ namespace BTL_KhaoSatOnline.Controllers
 
             return RedirectToAction("MySurveys");
         }
-
         // GET: Survey/Results/5
         public async Task<IActionResult> Results(int? id)
         {
@@ -264,28 +266,20 @@ namespace BTL_KhaoSatOnline.Controllers
 
             var survey = await _context.Surveys
                 .Include(s => s.Questions)
-                .ThenInclude(q => q.Answers)
-                .ThenInclude(a => a.Option)
+                    .ThenInclude(q => q.Options)
+                .Include(s => s.Questions)
+                    .ThenInclude(q => q.Answers)
+                        .ThenInclude(a => a.Option)
                 .FirstOrDefaultAsync(s => s.SurveyId == id);
 
             if (survey == null) return NotFound();
 
-            return View(survey);
-        }
-        [HttpGet]
-        public async Task<IActionResult> Search(string query)
-        {
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                return View(new List<Survey>()); // hoặc trả về tất cả khảo sát nếu bạn muốn
-            }
-
-            var matchedSurveys = await _context.Surveys
-                .Where(s => s.Title.Contains(query))
-                .ToListAsync();
-
-            return View(matchedSurveys);
+            return View(survey); // Trả về model là Survey
         }
     }
-
 }
+
+        
+    
+
+
