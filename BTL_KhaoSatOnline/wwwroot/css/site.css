@@ -100,4 +100,14 @@ body {
     margin-left: 10px;
 }
 
+.user-name {
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.dropdown-menu {
+    min-width: 200px;
+}
+
+
 /*Form css*/

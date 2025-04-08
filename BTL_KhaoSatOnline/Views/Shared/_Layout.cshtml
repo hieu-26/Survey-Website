@@ -47,19 +47,34 @@
                         @* @if (Context.Session.GetInt32("UserId") != null)  Đoạn này không chạy được*@
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <div class="user-profile">
-                                <!-- Hiển thị ảnh hoặc tên người dùng -->
-                                <img src="~/images/default-avatar.png" alt="Avatar" class="user-avatar">
-                                <span class="user-name">@Context.Session.GetString("Username")</span>
-                                <i class="fas fa-caret-down"></i>
+                            @* <div class="user-profile"> *@
+                            @*     <!-- Hiển thị ảnh hoặc tên người dùng --> *@
+                            @*     <img src="~/images/default-avatar.png" alt="Avatar" class="user-avatar"> *@
+                            @*     <span class="user-name">@Context.Session.GetString("Username")</span> *@
+                            @*     <i class="fas fa-caret-down"></i> *@
 
-                                <div class="dropdown-menu">
-                                    <a href="#"><i class="fas fa-user"></i> Trang cá nhân</a>
-                                    <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
-                                    <div class="divider"></div>
-                                    <a asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                                </div>
+                            @*     <div class="dropdown-menu"> *@
+                            @*         <a href="#"><i class="fas fa-user"></i> Trang cá nhân</a> *@
+                            @*         <a href="#"><i class="fas fa-cog"></i> Cài đặt</a> *@
+                            @*         <div class="divider"></div> *@
+                            @*         <a asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a> *@
+                            @*     </div> *@
+                            @* </div> *@
+
+                            <div class="dropdown user-profile">
+                                <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" id="userDropdown"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="~/images/default-avatar.png" alt="Avatar" class="rounded-circle me-2" width="32" height="32">
+                                    <span class="user-name">@Context.Session.GetString("Username")</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Trang cá nhân</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Cài đặt</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                </ul>
                             </div>
+
                         }
                         else
                         {

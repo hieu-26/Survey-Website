@@ -9,6 +9,8 @@ using BTL_KhaoSatOnline.Models.ViewModels;
 namespace BTL_KhaoSatOnline.Controllers
 {
     [Authorize]
+    //[AllowAnonymous]
+
     public class SurveyController : Controller
     {
         private readonly SurveyDbContext _context;
@@ -35,10 +37,21 @@ namespace BTL_KhaoSatOnline.Controllers
         }
 
         // POST: Survey/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SurveyCreateViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error); // hoặc log lỗi
+                }
+                return View(model);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
