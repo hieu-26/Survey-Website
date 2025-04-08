@@ -1,0 +1,76 @@
+﻿@model BTL_KhaoSatOnline.Models.ViewModels.SurveyCreateViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa khảo sát";
+    var questionIndex = 0;
+}
+<h2>Chỉnh sửa khảo sát</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="id" value="@ViewBag.SurveyId" />
+
+    <div><label>Tiêu đề:</label><input asp-for="Title" class="form-control" /></div>
+    <div><label>Mô tả:</label><textarea asp-for="Description" class="form-control"></textarea></div>
+    <div><label>Hiển thị công khai:</label><input asp-for="IsPublic" type="checkbox" /></div>
+    <div><label>Cho phép trả lời nhiều lần:</label><input asp-for="AllowMultipleResponses" type="checkbox" /></div>
+    <div><label>Yêu cầu đăng nhập:</label><input asp-for="RequireLogin" type="checkbox" /></div>
+    <div><label>Ngày bắt đầu:</label><input asp-for="StartDate" type="datetime-local" /></div>
+    <div><label>Ngày kết thúc:</label><input asp-for="EndDate" type="datetime-local" /></div>
+
+    <hr />
+    <h4>Câu hỏi</h4>
+    <div id="questions-container">
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+            <div class="question" data-index="@i">
+                <label>Câu hỏi:</label>
+                <input name="Questions[@i].QuestionText" value="@Model.Questions[i].QuestionText" class="form-control" />
+
+                <label>Loại:</label>
+                <select name="Questions[@i].QuestionType" class="form-select">
+                    <option value="MultipleChoice" selected="@("MultipleChoice" == Model.Questions[i].QuestionType)">Trắc nghiệm</option>
+                    <option value="Text" selected="@("Text" == Model.Questions[i].QuestionType)">Tự luận</option>
+                </select>
+
+                <label>Bắt buộc:</label>
+                <input name="Questions[@i].IsRequired" type="checkbox" @(Model.Questions[i].IsRequired ? "checked" : "") />
+
+                <div class="options-container">
+                    @for (int j = 0; j < Model.Questions[i].Options.Count; j++)
+                    {
+                        <div class="option">
+                            <input name="Questions[@i].Options[@j].OptionText" value="@Model.Questions[i].Options[j].OptionText" class="form-control" />
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-secondary add-option">+ Thêm lựa chọn</button>
+                <button type="button" class="btn btn-danger remove-question">Xóa câu hỏi</button>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Lưu chỉnh sửa</button>
+</form>
+
+@section Scripts {
+    <script>
+        let questionIndex = @Model.Questions.Count;
+        document.querySelectorAll(".add-option").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const question = this.closest(".question");
+                const qIndex = question.dataset.index;
+                const container = question.querySelector(".options-container");
+                const optionCount = container.querySelectorAll(".option").length;
+
+                const newOpt = document.createElement("div");
+                newOpt.classList.add("option");
+                newOpt.innerHTML = `<input name="Questions[${qIndex}].Options[${optionCount}].OptionText" class="form-control" />`;
+                container.appendChild(newOpt);
+            });
+        });
+
+        document.querySelectorAll(".remove-question").forEach(btn => {
+            btn.addEventListener("click", function () {
+                this.closest(".question").remove();
+            });
+        });
+    </script>
+}
